@@ -1,22 +1,21 @@
 import streamlit as st
-from datetime import datetime, date, time
-import gspread
+import json
 from google.oauth2.service_account import Credentials
+import gspread
 
-# --- Google Sheets Setup ---
 SCOPE = [
     "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive",
 ]
-# Upload your credentials.json via Streamlit sidebar, or point to the path directly if deploying
-credentials_file = st.secrets["gcp_service_account"] if "gcp_service_account" in st.secrets else "credentials.json"
-creds = Credentials.from_service_account_file(credentials_file, scopes=SCOPE)
+
+creds_dict = json.loads(st.secrets["gcp_service_account"])
+creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
 client = gspread.authorize(creds)
-sheet_url = st.secrets["sheet_url"] if "sheet_url" in st.secrets else st.text_input("Enter your Google Sheet URL")
-worksheet = None
-if sheet_url:
-    sh = client.open_by_url(sheet_url)
-    worksheet = sh.sheet1
+
+sheet_url = st.secrets["sheet_url"]
+sh = client.open_by_url(sheet_url)
+worksheet = sh.sheet1
+
 
 # --- CSS for Modern Look ---
 st.markdown("""
