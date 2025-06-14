@@ -1,6 +1,6 @@
 import streamlit as st
 import json
-from datetime import date
+from datetime import timedelta
 from google.oauth2.service_account import Credentials
 import gspread
 
@@ -39,8 +39,8 @@ with col1:
     # Input fields
     today = date.today()
     d = st.date_input("Date", today)
-    start = st.time_input("Start Time", step=1)
-    end = st.time_input("End Time", step=1)
+    start = st.time_input("Start Time", step=timedelta(minutes=1))
+    end = st.time_input("End Time", step=timedelta(minutes=1))
     cat = st.selectbox("Category", ["Productive", "Not-Productive"])
     default_subcategories = [
         "Academic Study", "Read Book", "Smoke", "Household Chores", "Daily Essentials",
